@@ -3,13 +3,27 @@ import PropTypes from 'prop-types';
 import AppContext from './AppContext';
 
 function Provider({ children }) {
+  const columnToGrab = [
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ];
   const [data, setData] = useState([]);
   const [filterByName, setFilterByName] = useState({ name: '' });
+  const [
+    filterByNumericValues,
+    setFilterByNumericValues,
+  ] = useState([]);
   const state = {
     data,
     setData,
     filterByName,
     setFilterByName,
+    columnToGrab,
+    filterByNumericValues,
+    setFilterByNumericValues,
   };
   return (
     <AppContext.Provider value={ state }>

@@ -2,27 +2,27 @@ import React, { useContext, useEffect, useState } from 'react';
 import AppContext from '../context/AppContext';
 import fetchAPI from '../services/fetchAPI';
 import Filters from './Filters';
-import filterByPlanetName from '../helpers';
+import { filterPlanets } from '../helpers';
 
 function Table() {
-  const { data, setData, filterByName } = useContext(AppContext);
-  const [planetsFilteredList, setPlanetsFilteredList] = useState([]);
+  const { data, setData, filterByName, filterByNumericValues } = useContext(AppContext);
+  const [filteredPlanetsList, setFilteredPlanetsList] = useState([]);
 
   useEffect(() => {
     const getPlanetsStarWars = async () => {
       const results = await fetchAPI();
       setData(results);
-      setPlanetsFilteredList(results);
+      setFilteredPlanetsList(results);
     };
     getPlanetsStarWars();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    const planetsFiltered = filterByPlanetName(data, filterByName);
-    setPlanetsFilteredList(planetsFiltered);
+    const filteredPlanets = filterPlanets(data, filterByName, filterByNumericValues);
+    setFilteredPlanetsList(filteredPlanets);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterByName]);
+  }, [filterByName, filterByNumericValues]);
 
   return (
     <section>
@@ -46,7 +46,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {planetsFilteredList.map((planet) => (
+          {filteredPlanetsList.map((planet) => (
             <tr key={ planet.name }>
               <td>{planet.name}</td>
               <td>{planet.rotation_period}</td>
