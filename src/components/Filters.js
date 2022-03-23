@@ -33,6 +33,15 @@ function Filters() {
     setFilterByNumericValues([...filterByNumericValues, localState]);
   };
 
+  const removeAllFilters = () => {
+    setFilterByNumericValues([]);
+  };
+
+  const removeFilter = (column) => {
+    const arr = filterByNumericValues.filter((obj) => obj.column !== column);
+    setFilterByNumericValues(arr);
+  };
+
   useEffect(() => {
     const listColumn = removeColumn(columnToGrab, filterByNumericValues);
     setColumnList(listColumn);
@@ -86,6 +95,28 @@ function Filters() {
       >
         Filtrar
       </button>
+      <button
+        type="button"
+        data-testid="button-remove-filters"
+        onClick={ removeAllFilters }
+      >
+        Remover Filtros
+      </button>
+      {
+        filterByNumericValues.length > 0 ? (
+          filterByNumericValues.map(({ column, comparison, value }) => (
+            <div key={ column } data-testid="filter">
+              <p>{`${column} ${comparison} ${value}`}</p>
+              <button
+                type="button"
+                onClick={ () => removeFilter(column) }
+              >
+                X
+              </button>
+            </div>
+          ))
+        ) : ''
+      }
     </section>
   );
 }
