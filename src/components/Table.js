@@ -1,21 +1,32 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AppContext from '../context/AppContext';
 import fetchAPI from '../services/fetchAPI';
+import Filters from './Filters';
+import filterByPlanetName from '../helpers';
 
 function Table() {
-  const { data, setData } = useContext(AppContext);
+  const { data, setData, filterByName } = useContext(AppContext);
+  const [planetsFilteredList, setPlanetsFilteredList] = useState([]);
 
   useEffect(() => {
     const getPlanetsStarWars = async () => {
       const results = await fetchAPI();
       setData(results);
+      setPlanetsFilteredList(results);
     };
     getPlanetsStarWars();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const planetsFiltered = filterByPlanetName(data, filterByName);
+    setPlanetsFilteredList(planetsFiltered);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterByName]);
+
   return (
     <section>
+      <Filters />
       <table>
         <thead>
           <tr>
@@ -35,7 +46,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {data.map((planet) => (
+          {planetsFilteredList.map((planet) => (
             <tr key={ planet.name }>
               <td>{planet.name}</td>
               <td>{planet.rotation_period}</td>
