@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import AppContext from '../context/AppContext';
+import { removeColumn } from '../helpers';
 
 function Filters() {
   const {
@@ -8,21 +9,37 @@ function Filters() {
     filterByNumericValues,
     setFilterByNumericValues,
   } = useContext(AppContext);
+  const [columnList, setColumnList] = useState(columnToGrab);
   const state = {
     column: 'population',
     comparison: 'maior que',
     value: 0,
   };
   const [localState, setLocalState] = useState(state);
+
+  useEffect(() => {
+    setColumnList(columnToGrab);
+  }, [columnToGrab]);
+
   const handleChangeFilter = ({ target: { name, value } }) => {
     setLocalState({ ...localState, [name]: value });
   };
+
   const handleChangeName = ({ target: { value } }) => {
     setFilterByName({ name: value });
   };
+
   const handleClickFilter = () => {
     setFilterByNumericValues([...filterByNumericValues, localState]);
   };
+
+  useEffect(() => {
+    const listColumn = removeColumn(columnToGrab, filterByNumericValues);
+    setColumnList(listColumn);
+    setLocalState({ ...localState, column: listColumn[0] });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterByNumericValues]);
+
   return (
     <section>
       <input
@@ -32,10 +49,11 @@ function Filters() {
       />
       <select
         name="column"
+        value={ localState.column }
         data-testid="column-filter"
         onChange={ handleChangeFilter }
       >
-        {columnToGrab.map((item, index) => (
+        {columnList.map((item, index) => (
           <option
             key={ index }
             value={ item }
@@ -46,6 +64,7 @@ function Filters() {
       </select>
       <select
         name="comparison"
+        value={ localState.comparison }
         data-testid="comparison-filter"
         onChange={ handleChangeFilter }
       >

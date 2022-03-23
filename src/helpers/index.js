@@ -30,3 +30,14 @@ export const filterPlanets = (data, filterByName, filterByNumericValues) => {
   filteredPlanets = filterByValues(filteredPlanets, filterByNumericValues);
   return filteredPlanets;
 };
+
+export const removeColumn = (columnList, filterListByValues) => {
+  if (filterListByValues.length > 0) {
+    let columnListRemoved = columnList;
+    filterListByValues.forEach(({ column }) => {
+      columnListRemoved = columnListRemoved.filter((item) => item !== column);
+    });
+    return columnListRemoved;
+  }
+  return columnList;
+};
