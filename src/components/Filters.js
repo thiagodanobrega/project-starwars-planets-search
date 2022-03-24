@@ -8,6 +8,7 @@ function Filters() {
     columnToGrab,
     filterByNumericValues,
     setFilterByNumericValues,
+    setOrder,
   } = useContext(AppContext);
   const [columnList, setColumnList] = useState(columnToGrab);
   const state = {
@@ -15,7 +16,12 @@ function Filters() {
     comparison: 'maior que',
     value: 0,
   };
+  const stateOrder = {
+    column: 'population',
+    sort: '',
+  };
   const [localState, setLocalState] = useState(state);
+  const [localStateOrder, setLocalStateOrder] = useState(stateOrder);
 
   useEffect(() => {
     setColumnList(columnToGrab);
@@ -23,6 +29,14 @@ function Filters() {
 
   const handleChangeFilter = ({ target: { name, value } }) => {
     setLocalState({ ...localState, [name]: value });
+  };
+
+  const handleChangeOrder = ({ target: { name, value } }) => {
+    setLocalStateOrder({ ...localStateOrder, [name]: value });
+  };
+
+  const handleClickOrder = () => {
+    setOrder(localStateOrder);
   };
 
   const handleChangeName = ({ target: { value } }) => {
@@ -58,14 +72,12 @@ function Filters() {
       />
       <select
         name="column"
-        value={ localState.column }
         data-testid="column-filter"
         onChange={ handleChangeFilter }
       >
         {columnList.map((item, index) => (
           <option
             key={ index }
-            value={ item }
           >
             {item}
           </option>
@@ -73,7 +85,6 @@ function Filters() {
       </select>
       <select
         name="comparison"
-        value={ localState.comparison }
         data-testid="comparison-filter"
         onChange={ handleChangeFilter }
       >
@@ -95,6 +106,51 @@ function Filters() {
       >
         Filtrar
       </button>
+
+      <select
+        name="column"
+        data-testid="column-sort"
+        onChange={ handleChangeOrder }
+      >
+        {columnToGrab.map((column, index) => (
+          <option
+            key={ index }
+          >
+            {column}
+          </option>
+        ))}
+      </select>
+
+      <label htmlFor="order-asc">
+        Ascendente
+        <input
+          data-testid="column-sort-input-asc"
+          type="radio"
+          name="sort"
+          value="ASC"
+          onChange={ handleChangeOrder }
+        />
+      </label>
+
+      <label htmlFor="order-desc">
+        Descendente
+        <input
+          data-testid="column-sort-input-desc"
+          type="radio"
+          name="sort"
+          value="DESC"
+          onChange={ handleChangeOrder }
+        />
+      </label>
+
+      <button
+        type="button"
+        data-testid="column-sort-button"
+        onClick={ handleClickOrder }
+      >
+        Ordenar
+      </button>
+
       <button
         type="button"
         data-testid="button-remove-filters"

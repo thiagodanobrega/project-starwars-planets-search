@@ -5,12 +5,17 @@ import Filters from './Filters';
 import { filterPlanets } from '../helpers';
 
 function Table() {
-  const { data, setData, filterByName, filterByNumericValues } = useContext(AppContext);
+  const {
+    data, setData, filterByName, filterByNumericValues, order,
+  } = useContext(AppContext);
+
   const [filteredPlanetsList, setFilteredPlanetsList] = useState([]);
 
   useEffect(() => {
     const getPlanetsStarWars = async () => {
+      const NUMBER_CHECK = -1;
       const results = await fetchAPI();
+      results.sort((a, b) => (a.name > b.name ? 1 : NUMBER_CHECK));
       setData(results);
       setFilteredPlanetsList(results);
     };
@@ -19,10 +24,12 @@ function Table() {
   }, []);
 
   useEffect(() => {
-    const filteredPlanets = filterPlanets(data, filterByName, filterByNumericValues);
+    const filteredPlanets = filterPlanets(
+      data, filterByName, filterByNumericValues, order,
+    );
     setFilteredPlanetsList(filteredPlanets);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterByName, filterByNumericValues]);
+  }, [filterByName, filterByNumericValues, order]);
 
   return (
     <section>
@@ -48,7 +55,7 @@ function Table() {
         <tbody>
           {filteredPlanetsList.map((planet) => (
             <tr key={ planet.name }>
-              <td>{planet.name}</td>
+              <td data-testId="planet-name">{planet.name}</td>
               <td>{planet.rotation_period}</td>
               <td>{planet.orbital_period}</td>
               <td>{planet.diameter}</td>

@@ -11,6 +11,7 @@ function Provider({ children }) {
     'surface_water',
   ];
   const [data, setData] = useState([]);
+  const [order, setOrder] = useState({});
   const [filterByName, setFilterByName] = useState({ name: '' });
   const [
     filterByNumericValues,
@@ -24,6 +25,8 @@ function Provider({ children }) {
     columnToGrab,
     filterByNumericValues,
     setFilterByNumericValues,
+    order,
+    setOrder,
   };
   return (
     <AppContext.Provider value={ state }>
