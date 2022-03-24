@@ -25,6 +25,7 @@ export const filterByValues = (listOfPlanets, filterListByValues) => {
   return listOfPlanets;
 };
 
+// REF: https://www.horadecodar.com.br/2020/03/30/javascript-mudar-a-posicao-de-um-elemento-no-array/
 function changePosition(arr, from, to) {
   arr.splice(to, 0, arr.splice(from, 1)[0]);
   return arr;
